@@ -27,9 +27,9 @@ def get_card_text(card_name):
         card_data = response.json()
         return card_data.get('oracle_text', 'Oracle text not found.')
     except requests.exceptions.RequestException as e:
-        return f"An error occurred: {e}"
+        return "An error occurred"
     except ValueError:
-        return "Error: Unable to parse the API response."
+        return "An error occurred"
 
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
@@ -45,8 +45,37 @@ def categorize_card(card_text):
     categories = [label.split(':')[0] for label in categories]
     return categories
 
-cards = read_csv_to_array('sample.csv')
-for card in cards:
-    card_text = get_card_text(card[0])
-    categories = categorize_card(card_text)
-    print(f"{card[0]}: {categories}")
+def get_user_input():
+    print("\nMTG Card Categorizer")
+    print("1. Run sample file")
+    print("2. Categorize specific card")
+    print("3. Exit")
+    choice = input("Enter your choice (1-3): ")
+    return choice
+
+def main():
+    while True:
+        choice = get_user_input()
+        if choice == "1":
+            cards = read_csv_to_array('sample.csv')
+            if cards:
+                for card in cards:
+                    card_text = get_card_text(card[0])
+                    categories = categorize_card(card_text)
+                    print(f"{card[0]}: {categories}")
+        elif choice == "2":
+            card_name = input("\nEnter card name: ")
+            card_text = get_card_text(card_name)
+            if card_text == "Oracle text not found." or card_text == "An error occurred":
+                print("Card not found")
+            else:
+                categories = categorize_card(card_text)
+                print(f"{card_name}: {categories}")
+        elif choice == "3" or choice.lower() == "exit":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()

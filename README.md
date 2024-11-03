@@ -17,8 +17,12 @@ python mtg_ai.py
 ## Sample Output
 
 ```
-Farseek: ['Ramp']
-Doom Blade: ['Removal']
-Abrade: ['Removal']
-Armageddon: ['Board Wipe']
+MTG Card Categorizer
+1. Run sample file
+2. Categorize specific card
+3. Exit
+Enter your choice (1-3): 2
+
+Enter card name: Rampant Growth
+Rampant Growth: ['Ramp']
 ```
